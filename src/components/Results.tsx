@@ -29,8 +29,8 @@ export default function Results({filter, getAlias, isDataFetched, openModal, pok
         const areFiltersApplied = !!checkedTypes.length
         const availableTypes = areFiltersApplied ? checkedTypes : [...filter.keys()]
         let data: Pokemon = areFiltersApplied
-            ? JSON.parse(JSON.stringify(pokemon)).filter(({types}: {types: TypeName[]}) => checkedTypes.every(type => types.includes(type)))
-            : JSON.parse(JSON.stringify(pokemon))
+            ? structuredClone(pokemon).filter(({types}: {types: TypeName[]}) => checkedTypes.every(type => types.includes(type)))
+            : structuredClone(pokemon)
         
         // if no results match filter(s) applied; array is empty, dummy element is returned
         if (!!!data.length) {

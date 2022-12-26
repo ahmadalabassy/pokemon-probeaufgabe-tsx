@@ -4,9 +4,6 @@ import DetailedView from './components/DetailedView'
 import LoadMore from './components/LoadMore'
 import Results from './components/Results'
 
-// Import needed Bootstrap JS plugins
-import { Dropdown, Modal } from 'bootstrap'
-
 // Import styles
 import 'bootstrap/dist/css/bootstrap.min.css'
 import './App.css'
@@ -91,12 +88,12 @@ export default function App() {
 	}
 
 	// controls functions for filtering and sorting
-	const applyFilter = (name: TypeName): void => setFilter(prev => JSON.parse(JSON.stringify(prev)).set(name, !prev.get(name)))
+	const applyFilter = (name: TypeName): void => setFilter(prev => structuredClone(prev).set(name, !prev.get(name)))
 	const getAlias = (name: TypeName): string => (types.find(([type]) => type === name)!)[1]
 	const handleSort = (name: SortName): void => {
-		if(name === 'ascending') setSort(prev => JSON.parse(JSON.stringify(prev)).set(name, !prev.get(name)).set('descending', false))
-		else if(name === 'descending') setSort(prev => JSON.parse(JSON.stringify(prev)).set(name, !prev.get(name)).set('ascending', false))
-		else setSort(prev => JSON.parse(JSON.stringify(prev)).set(name, !prev.get(name)))
+		if(name === 'ascending') setSort(prev => structuredClone(prev).set(name, !prev.get(name)).set('descending', false))
+		else if(name === 'descending') setSort(prev => structuredClone(prev).set(name, !prev.get(name)).set('ascending', false))
+		else setSort(prev => structuredClone(prev).set(name, !prev.get(name)))
   	}
 	const updateOffset = (): void => {setOffset(prev => prev + limit)}
 	
@@ -113,7 +110,7 @@ export default function App() {
 					handleSort={handleSort}
 					sort={sort}
 					types={types}
-				/>, [filter, sort])}
+				/>, [filter, sort, types])}
 				{useMemo(() => <Results
 					filter={filter}
 					getAlias={getAlias}

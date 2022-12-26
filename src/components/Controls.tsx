@@ -10,7 +10,7 @@ export default function Controls({applyFilter, filter, handleSort, sort, types}:
 {
     applyFilter: (name: TypeName) => void;
     filter: Filter
-    handleSort: Function;
+    handleSort: (name: SortName) => void;
     sort: Sort;
     types: Types;
 }) {
@@ -26,18 +26,18 @@ export default function Controls({applyFilter, filter, handleSort, sort, types}:
             ></input>
             <label className="filter-label" htmlFor={name}>{alias}</label>
         </div>
-    ), [filter])
-
+    ), [filter, types])
+    
     const sortOptions = useMemo(() => sortAliased.map(({name, alias}, index: number) =>
         <div key={index} className="option">
-        <input
-            className="sort-checkbox"
-            type="checkbox"
-            checked={sort.get(name)}
-            id={name}
-            onChange={() => handleSort(name)}
-        ></input>
-        <label className="sort-label" htmlFor={name}>{alias}</label>
+            <input
+                className="sort-checkbox"
+                type="checkbox"
+                checked={sort.get(name)}
+                id={name}
+                onChange={() => handleSort(name)}
+            ></input>
+            <label className="sort-label" htmlFor={name}>{alias}</label>
         </div>
     ), [sort])
 
