@@ -6,5 +6,13 @@ type SortName = "ascending" | "descending" | "byType"
 type Types = [TypeName, string][]
 type Filter = Map<TypeName, boolean>
 type Sort = Map<SortName, boolean>
-// type Filter = {[key in TypeName]: boolean;}
-// type Sort = {[key in SortName]: boolean;}
+interface ModalData {
+    name: string;
+    base_experience: number;
+    height: number;
+    weight: number;
+    forms: {name: string, url: URL}[];
+    abilities: {ability: {name: string, url: URL}}[];
+    types: {type: {name: TypeName, url: URL}}[];
+    stats: {base_stat: number; stat: {name: string, url: URL}}[];
+}

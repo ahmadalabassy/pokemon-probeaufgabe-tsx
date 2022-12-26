@@ -1,4 +1,4 @@
-import { useMemo, useState, useEffect } from 'react'
+import { useCallback, useEffect, useMemo,  useState } from 'react'
 import Controls from './components/Controls'
 import DetailedView from './components/DetailedView'
 import LoadMore from './components/LoadMore'
@@ -12,7 +12,7 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import './App.css'
 
 const path = `https://pokeapi.co/api/v2`
-const limit = 150
+const limit = 50
 
 export default function App() {  
     const [pokemon, setPokemon] = useState<Pokemon>([])
@@ -21,9 +21,9 @@ export default function App() {
 	const [filter, setFilter] = useState<Filter>(() => new Map([["normal", false], ["fighting", false], ["flying", false], ["poison", false], ["ground", false], ["rock", false], ["bug", false], ["ghost", false], ["steel", false], ["fire", false], ["water", false], ["grass", false], ["electric", false], ["psychic", false], ["ice", false], ["dragon", false], ["dark", false], ["fairy", false]]))
 	const [sort, setSort] = useState<Sort>(() => new Map([['ascending', false], ['descending', false], ['byType', false]]))
 	const [offset, setOffset] = useState<number>(0)
-	const [modalData, setModalData] = useState(() => ({}))
+	const [modalData, setModalData] = useState<ModalData | null>(() => null)
 	const [pokemonToOpenInModal, setPokemonToOpenInModal] = useState<{id: string, url: URL | undefined, isOpen: boolean}>(() => ({id: '', url: undefined, isOpen: false}))
-    const [isDataFetched, setIsDataFetched] = useState<boolean>(() => false)
+    const isDataFetched = !!pokemon.length
 
     // fetch pokemon characters and pokemon types at initial render
 	useEffect(() => {
@@ -59,7 +59,6 @@ export default function App() {
 			})
 		})
 		.catch(error => console.error(error))
-		.finally(() => setIsDataFetched(true))
 	}, [])
 
     // fetch more pokemon characters when load more button is clicked
@@ -93,12 +92,12 @@ export default function App() {
 
 	// controls functions for filtering and sorting
 	const applyFilter = (name: TypeName): void => setFilter(prev => JSON.parse(JSON.stringify(prev)).set(name, !prev.get(name)))
+	const getAlias = (name: TypeName): string => (types.find(([type]) => type === name)!)[1]
 	const handleSort = (name: SortName): void => {
 		if(name === 'ascending') setSort(prev => JSON.parse(JSON.stringify(prev)).set(name, !prev.get(name)).set('descending', false))
 		else if(name === 'descending') setSort(prev => JSON.parse(JSON.stringify(prev)).set(name, !prev.get(name)).set('ascending', false))
 		else setSort(prev => JSON.parse(JSON.stringify(prev)).set(name, !prev.get(name)))
   	}
-    const getAlias = (name: TypeName): string => (types.find(([type]) => type === name)!)[1]
 	const updateOffset = (): void => {setOffset(prev => prev + limit)}
 	
 	// modal functions for detailed view
@@ -109,27 +108,26 @@ export default function App() {
 			<header><img src='./pokémon_logo.svg' alt="Pokémon" width="272.7" height="100"/></header>
 			<main>
 				{useMemo(() => <Controls
-					types={types}
 					applyFilter={applyFilter}
+					filter={filter}
 					handleSort={handleSort}
 					sort={sort}
-					filter={filter}
-				/>, [sort, filter])}
+					types={types}
+				/>, [filter, sort])}
 				{useMemo(() => <Results
-					pokemon={pokemon}
 					filter={filter}
-					isDataFetched={isDataFetched}
-					sort={sort}
 					getAlias={getAlias}
-					openModal={openModal}
-				/>, [offset, filter, sort])}
-				<LoadMore
-					offset={offset}
 					isDataFetched={isDataFetched}
+					openModal={openModal}
+					pokemon={pokemon}
+					sort={sort}
+				/>, [filter, pokemon, sort])}
+				{isDataFetched ? <LoadMore
+					offset={offset}
 					updateOffset={updateOffset}
-				/>
+				/> : <></>}
 			</main>
-			{useMemo(() => pokemonToOpenInModal.isOpen ? <DetailedView modalData={modalData} /> : <></>, [pokemonToOpenInModal.id])}
+			<aside>{pokemonToOpenInModal.isOpen && !!modalData ? <DetailedView modalData={modalData} getAlias={getAlias} /> : <></>}</aside>
 			<footer>Probeaufgabe | Solongo</footer>
 		</div>
 	)

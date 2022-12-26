@@ -6,13 +6,13 @@ const sortAliased: {name: SortName, alias: string}[] = [
     {name: 'byType', alias: 'Nach Typ'}
 ]
 
-export default function Controls({types, applyFilter, handleSort, sort, filter}:
+export default function Controls({applyFilter, filter, handleSort, sort, types}:
 {
-    types: Types;
     applyFilter: (name: TypeName) => void;
+    filter: Filter
     handleSort: Function;
     sort: Sort;
-    filter: Filter
+    types: Types;
 }) {
     // create React elements for Pokemon types
     const typeOptions = useMemo(() => types.map(([name, alias]) =>

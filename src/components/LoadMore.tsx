@@ -1,10 +1,9 @@
-export default function LoadMore({offset, isDataFetched, updateOffset}:
+export default function LoadMore({offset, updateOffset}:
 {
 	offset: number;
-	isDataFetched: boolean;
 	updateOffset: () => void;
 }) {
-	return offset < 450 && isDataFetched
+	return offset < 550
 		? <button className='btn btn-primary load-more' onClick={() => updateOffset()}>Mehr laden</button>
 		: <></>
 }

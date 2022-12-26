@@ -1,10 +1,10 @@
 import { memo } from "react"
 import { capitalize } from "../utils"
 
-export default memo(function Pokemon({name, id, openModal}:
+export default memo(function Pokemon({id, name, openModal}:
 {
-    name: string;
     id: string;
+    name: string;
     openModal: (id: string, url: URL) => void;
 }) {
     return (

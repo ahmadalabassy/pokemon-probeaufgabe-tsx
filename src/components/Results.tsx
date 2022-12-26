@@ -1,29 +1,30 @@
-import { useRef, useMemo } from 'react'
-import { removeClass, addClass, getCheckedKeys } from '../utils'
+import { useMemo, useRef } from 'react'
+import { addClass, getCheckedKeys, removeClass } from '../utils'
 import Pokemon from './Pokemon'
 
-export default function Results({pokemon, filter, sort, getAlias, isDataFetched, openModal}:
+export default function Results({filter, getAlias, isDataFetched, openModal, pokemon, sort}:
 {
-    pokemon: Pokemon;
     filter: Filter;
-    sort: Sort;
     getAlias: (name: TypeName) => string;
     isDataFetched: boolean;
     openModal: (id: string, url: URL) => void;
+    pokemon: Pokemon;
+    sort: Sort;
 }) {
     const sectionRef = useRef<HTMLElement>(null)
     const checkedTypes: TypeName[] = useMemo(() => getCheckedKeys<TypeName>(filter), [filter])
     const checkedSort: SortName[] = useMemo(() => getCheckedKeys<SortName>(sort), [sort])
 
-    const pokemonElement = (name: string, url: URL) => {
+    const pokemonElement = ({name, url}: {name: string, url: URL}) => {
         const id = parseInt(url.toString().split('//')[1].slice(0, -1).split('/').pop()!)
-        return <Pokemon key={id} name={name} id={id.toString()} openModal={() => openModal(id.toString(), url)} />
+        return <Pokemon key={id} id={id.toString()} name={name} openModal={() => openModal(id.toString(), url)} />
     }
+    const pokemonElements = (matches: Pokemon) => matches.map(match => pokemonElement(match))
 
     // create React elements for Pokemon characters
-    /* pokemonElements function is never invoked when sectionRef has initial value of null,
+    /* applyControls function is never invoked when sectionRef has initial value of null,
        so it's safe to exclude null type for sectionRef.current when removing class inside the function */
-    const pokemonElements = () => {
+    const applyControls = () => {
         addClass(sectionRef.current!, "pokemon")
         const areFiltersApplied = !!checkedTypes.length
         const availableTypes = areFiltersApplied ? checkedTypes : [...filter.keys()]
@@ -47,7 +48,7 @@ export default function Results({pokemon, filter, sort, getAlias, isDataFetched,
             order = -1
             data.sort(({name: a}, {name: b}) => a > b ? -1 : a < b ? 1 : 0)
         }
-        if(!!!checkedSort.includes('byType')) return data.map(({name, url}) => pokemonElement(name, url))
+        if(!!!checkedSort.includes('byType')) return pokemonElements(data)
         /* sorting by type
         if no type is checked in filters, then data includes all types.
         types to be sorted alphabetically in ascending or descending order as well if the respective option is checked */
@@ -63,7 +64,7 @@ export default function Results({pokemon, filter, sort, getAlias, isDataFetched,
                     ? [...elements,
                         <div key={type} className="type-group">
                             <h2 className="type-group-title">{getAlias(type)}</h2>
-                            <div className="pokemon">{matches.map(({name, url}) => pokemonElement(name, url))}</div>
+                            <div className="pokemon">{pokemonElements(matches)}</div>
                         </div>]
                     : elements
                 )
@@ -73,7 +74,7 @@ export default function Results({pokemon, filter, sort, getAlias, isDataFetched,
 
     return (
         <section ref={sectionRef}>
-            {isDataFetched ? pokemonElements() : <div className="loading">Laden...</div>}
+            {isDataFetched ? applyControls() : <div className="loading">Laden...</div>}
         </section>
     )
 }
