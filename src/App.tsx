@@ -88,17 +88,17 @@ export default function App() {
 	}
 
 	// controls functions for filtering and sorting
-	const applyFilter = (name: TypeName): void => setFilter(prev => structuredClone(prev).set(name, !prev.get(name)))
-	const getAlias = (name: TypeName): string => (types.find(([type]) => type === name)!)[1]
-	const handleSort = (name: SortName): void => {
+	const applyFilter = useCallback((name: TypeName): void => setFilter(prev => structuredClone(prev).set(name, !prev.get(name))), [filter])
+	const getAlias = useCallback((name: TypeName): string => (types.find(([type]) => type === name)!)[1], [types])
+	const handleSort = useCallback((name: SortName): void => {
 		if(name === 'ascending') setSort(prev => structuredClone(prev).set(name, !prev.get(name)).set('descending', false))
 		else if(name === 'descending') setSort(prev => structuredClone(prev).set(name, !prev.get(name)).set('ascending', false))
 		else setSort(prev => structuredClone(prev).set(name, !prev.get(name)))
-  	}
-	const updateOffset = (): void => {setOffset(prev => prev + limit)}
+  	}, [sort])
+	const updateOffset = useCallback((): void => {setOffset(prev => prev + limit)}, [])
 	
 	// modal functions for detailed view
-	const openModal = (id: string, url: URL): void => setPokemonToOpenInModal({id, url, isOpen: true})
+	const openModal = useCallback((id: string, url: URL): void => setPokemonToOpenInModal({id, url, isOpen: true}), [pokemonToOpenInModal.id])
 
 	return (
 		<div className="App">
@@ -125,7 +125,7 @@ export default function App() {
 				/> : <></>}
 			</main>
 			<footer>Probeaufgabe | Solongo</footer>
-			{<DetailedView modalData={modalData!} getAlias={getAlias} />}
+			{useMemo(() => <DetailedView modalData={modalData!} getAlias={getAlias} />, [modalData])}
 		</div>
 	)
 }
