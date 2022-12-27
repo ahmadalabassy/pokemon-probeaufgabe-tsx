@@ -3,9 +3,7 @@
 :root {
     --accent-blue: #395FAA;
     --accent-yellow: #FFCB05;
-}
-
-.btn-primary {
+    --accent-blue-hover: #182849;
     --bs-btn-color: #fff;
     --bs-btn-bg: #395FAA;
     --bs-btn-border-color: none;
@@ -21,7 +19,7 @@
     --bs-btn-disabled-bg: #395FAA;
     --bs-btn-disabled-border-color: none;
     border-radius: 3px;
-}
+  }
 
 * {
     box-sizing: border-box;
@@ -31,6 +29,9 @@
 ::-webkit-scrollbar {
     width: 1em;
     height: 1em;
+    background-color: #fff;
+    border-top-right-radius: calc(.5rem - 1px);
+    border-bottom-right-radius: calc(.5rem - 1px);
 }
 
 ::-webkit-scrollbar-track {
@@ -192,6 +193,38 @@ footer {
     margin-top: 3em;
 }
 
+.no-results {
+    margin-bottom: 1em;
+}
+
+.btn {
+    border-radius: 3px;
+    background-color: var(--accent-blue);
+    padding: .5em 1.5em;
+    color: #fff;
+    border: none;
+}
+
+.btn:is(:focus, :hover, :active, :visited) {
+    background-color: var(--accent-blue-hover);
+    color: #fff;
+}
+
 .load-more {
     margin-top: 2em;
+}
+
+.modal-dialog {
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: fit-content;
+}
+
+.modal-body {
+    overflow: scroll;
+    overflow-x: hidden;
+    max-height: calc(100vh - 2em - 100px - 3.5rem);
+    max-width: 1024px;
+    text-align: left;
 }

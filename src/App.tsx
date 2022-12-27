@@ -125,7 +125,7 @@ export default function App() {
 				/> : <></>}
 			</main>
 			<footer>Probeaufgabe | Solongo</footer>
-			{pokemonToOpenInModal.isOpen && !!modalData ? <DetailedView modalData={modalData} getAlias={getAlias} /> : <></>}
+			{<DetailedView modalData={modalData!} getAlias={getAlias} />}
 		</div>
 	)
 }
