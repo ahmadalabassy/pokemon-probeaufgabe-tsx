@@ -1,18 +1,37 @@
-import { memo } from "react"
+import { memo, useState } from "react"
 import { capitalize } from "../utils"
+import { starFilledYellow, star } from './icons'
 
-export default memo(function Pokemon({id, name, openModal, url}:
+const fallbackSrc = "./pokemon/0.png"
+const missingSrcIds = [10158, 10182, 10183, 10158, 10121, 10122, 10130, 10131, 10132, 10133, 10134, 10135, 10143, 10145]
+
+export default memo(function Pokemon({id, isFavourite, name, openModal, toggleFavourite, url}:
 {
-    id: string;
+    id: number;
+    isFavourite: boolean;
     name: string;
-    openModal: (id: string, url: URL) => void;
+    openModal: (id: number, url: URL) => void;
+    toggleFavourite: (id: number) => void;
     url: URL
 }) {
+    const [hoveredOver, setHoveredOver] = useState(() => false)
+
     return (
-        <div className="character" onClick={() => openModal(id, url)} data-bs-toggle="modal" data-bs-target="#modal">
-            <h2 className="character-name">{capitalize(name)}</h2>
-            <img className="character-img" src={`./pokemon/${id}.svg`} alt={name}/>
-            <p className="character-number">{id}</p>
+        <div
+            className="character"
+            onMouseEnter={() => setHoveredOver(true)}
+            onMouseLeave={() => setHoveredOver(false)}
+            onClick={event => !!(event.target as HTMLDivElement).closest(".bi-star-fill-yellow, .bi-star") ? toggleFavourite(id) : openModal(id, url)}
+        >
+            <h2 className="character-name" data-bs-toggle="modal" data-bs-target="#modal">{capitalize(name)}</h2>
+            {(() => isFavourite || hoveredOver ? isFavourite ? starFilledYellow : star : <></>)()}
+            <img
+                className="character-img"
+                src={missingSrcIds.includes(id) ? fallbackSrc : `./pokemon/${id}.${id > 649 ? 'png' : 'svg'}`}
+                alt={name}
+                data-bs-toggle="modal" data-bs-target="#modal"
+            />
+            <p className="character-number" data-bs-toggle="modal" data-bs-target="#modal">{id}</p>
         </div>
     )
 })

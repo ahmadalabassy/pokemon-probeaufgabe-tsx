@@ -1,6 +1,6 @@
 
-type Pokemon = {name: string; types: TypeName[]; url: URL;}[]
-type PokemonWithoutTypes = {name: string; url: URL;}[]
+type Pokemon = {id: number; name: string; types: TypeName[]; url: URL;}[]
+type PokemonWithoutTypes = {id: number; name: string; url: URL;}[]
 type TypeName = "normal" | "fighting" | "flying" | "poison" | "ground" | "rock" | "bug" | "ghost" | "steel" | "fire" | "water" | "grass" | "electric" | "psychic" | "ice" | "dragon" | "dark" | "fairy"
 type SortName = "ascending" | "descending" | "byType"
 type Types = [TypeName, string][]
@@ -15,4 +15,10 @@ interface ModalData {
     abilities: {ability: {name: string, url: URL}}[];
     types: {type: {name: TypeName, url: URL}}[];
     stats: {base_stat: number; stat: {name: string, url: URL}}[];
+}
+interface ActiveControls {
+    keyword: boolean;
+    favourites: boolean;
+    filter: boolean;
+    sort: boolean;
 }
