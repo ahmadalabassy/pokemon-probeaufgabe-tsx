@@ -23,7 +23,7 @@ export default function DetailedView({modalData, getAlias}: {
             </>
     }
     
-     return (
+    return (
         <div className="modal fade" id="modal" data-bs-backdrop="static" tabIndex={-1} aria-labelledby="modalTitle" aria-hidden="true">
             <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable">
                 <div className="modal-content">

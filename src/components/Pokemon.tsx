@@ -1,11 +1,11 @@
-import { memo, useState } from "react"
+import { useState } from "react"
 import { capitalize } from "../utils"
 import { starFilledYellow, star } from './icons'
 
 const fallbackSrc = "./pokemon/0.png"
 const missingSrcIds = [10158, 10182, 10183, 10158, 10121, 10122, 10130, 10131, 10132, 10133, 10134, 10135, 10143, 10145]
 
-export default memo(function Pokemon({id, isFavourite, name, openModal, toggleFavourite, url}:
+export default function Pokemon({id, isFavourite, name, openModal, toggleFavourite, url}:
 {
     id: number;
     isFavourite: boolean;
@@ -34,4 +34,4 @@ export default memo(function Pokemon({id, isFavourite, name, openModal, toggleFa
             <p className="character-number" data-bs-toggle="modal" data-bs-target="#modal">{id}</p>
         </div>
     )
-})
+}

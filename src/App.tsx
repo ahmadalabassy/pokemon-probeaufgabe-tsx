@@ -55,7 +55,7 @@ export default function App() {
 			? matches.filter(({id, name, types}) =>
 				name.includes(searchKeyword) || types.some(type => type.toString().includes(searchKeyword)) || id.toString().includes(searchKeyword)) 
 			: matches)
-	})()), [allPokemon, favourites, activeControls.favourites, searchKeyword])
+	})()), [allPokemon, activeControls])
 	
     // fetch pokemon characters and pokemon types at initial render
 	useEffect(() => {
@@ -63,7 +63,6 @@ export default function App() {
 		const typeFetchArr: Promise<Response>[] = []
 		const updatedTypes: [TypeName, string][] = []
 		let updatedAllPokemon: PokemonWithoutTypes | Pokemon = []
-		let updatedFilter: Filter
 		let allPokemonGroupedByType: {[type in TypeName]: {name: string; url: URL;}[]} | {} = {}
 		fetch(`${path}${endPoint}`)
 		.then(response => response.json())
@@ -170,7 +169,7 @@ export default function App() {
 					pokemon={pokemon.slice(0, limit + offset)}
 					sort={sort}
 					toggleFavourite={toggleFavourite}
-				/>, [allPokemon, favourites, filter, offset, pokemon, searchKeyword, sort])}
+				/>, [favourites, filter, offset, pokemon, searchKeyword, sort])}
 				{isDataFetched && pokemon.length > offset + limit ? <LoadMore
 					offset={offset}
 					updateOffset={updateOffset}
